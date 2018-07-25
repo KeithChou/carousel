@@ -1,0 +1,11 @@
+@import './mixins/mixins';
+
+@include b(carousel) {
+	background-color: red;
+	@include e(container) {
+		font-size: 40px;
+		@include m(page) {
+			color: #fff;
+		}
+	}
+}

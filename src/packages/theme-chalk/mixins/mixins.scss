@@ -1,0 +1,30 @@
+@import './config';
+
+@mixin b($block) {
+	$B: $namespace + '-' + $block !global;
+	.#{$B} {
+		@content;
+	}
+}
+
+@mixin e($element) {
+	$E: $element !global;
+	$selector: &;
+	$current: $selector + $element-separator + $element;
+	@at-root {
+		#{$current} {
+			@content;
+		}
+	}
+}
+
+@mixin m($modifier) {
+	$M: $modifier !global;
+	$selector: &;
+	$current: $selector + $modifier-separator + $modifier;
+	@at-root {
+		#{$current} {
+			@content;
+		}
+	}
+}
