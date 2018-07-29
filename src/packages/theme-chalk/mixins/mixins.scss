@@ -47,7 +47,7 @@
 	}
 }
 
-@mixin state ($state) {
+@mixin when ($state) {
 	$current: $state-prefix + $state;
 	@at-root {
 		#{&}#{'.#{$current}'} {
