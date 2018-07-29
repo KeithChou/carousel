@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <carousel>
-      <carousel-item>
-        <div class="rascal">呵呵就能大了？</div>
+      <carousel-item v-for="item in 5" :key="item">
+        <h3>{{ item }}</h3>
       </carousel-item>
     </carousel>
   </div>

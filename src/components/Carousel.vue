@@ -39,6 +39,10 @@ export default {
   		type: Boolean,
   		default: true
   	},
+  	trigger: {
+  		type: String,
+  		default: 'hover'
+  	},
   	interval: {
   		type: Number,
   		default: 3000
@@ -52,14 +56,11 @@ export default {
   },
  	data () {
  	  return {
- 		  items: [{
- 		  	label: '1'
- 		  }, {
- 		  	label: '2'
- 		  }, {
- 		  	label: '3'
- 		  }],
- 		  activeIndex: -1
+ 		  items: [],
+ 		  activeIndex: -1,
+ 		  containerWidth: 0,
+ 		  timer: null,
+ 		  hover: false
  	  }
   },
   computed: {
@@ -67,7 +68,14 @@ export default {
   		return this.items.some(item => item.label.toString().length > 0)
   	}
   },
+  mounted () {
+  	// 根据子元素的carouselItem来确定indicator的个数
+  	this.updateItems()
+  },
   methods: {
+  	updateItems () {
+  		this.items = this.$children.filter(item => item.$options.name === 'carouselItem')
+  	},
   	handleMouseEnter () {},
   	handleMouseLeave () {},
   	throttledIndicatorHover () {}

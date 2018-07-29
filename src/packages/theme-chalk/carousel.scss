@@ -31,6 +31,7 @@ $--carousel-indicator-height: 2px !default;
 		margin: 0;
 		padding: 0;
 		z-index: #{$--index-normal + 1};
+        white-space: nowrap;
 		@include m(outside) {
 			position: static;
 			text-align: center;

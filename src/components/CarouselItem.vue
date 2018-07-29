@@ -46,5 +46,5 @@ export default {
 </script>
 
 <style lang="scss">
-
+@import '../packages/theme-chalk/carouselItem'
 </style>
