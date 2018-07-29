@@ -1,16 +1,37 @@
 @import './config';
-
-@mixin b($block) {
+@import './function';
+@mixin b ($block) {
 	$B: $namespace + '-' + $block !global;
 	.#{$B} {
 		@content;
 	}
 }
 
-@mixin e($element) {
+@mixin e ($element) {
 	$E: $element !global;
 	$selector: &;
-	$current: $selector + $element-separator + $element;
+	@if hitAllRules($selector) {
+		$current: '.' + $B + $element-separator + $E;
+		@at-root {
+			#{&} {
+				#{$current} {
+					@content;
+				}
+			}
+		}
+	} @else {
+		$current: & + $element-separator + $E;
+		@at-root {
+			#{$current} {
+				@content;
+			}
+		}
+	}
+}
+
+@mixin m ($modifier) {
+	$M: $modifier !global;
+	$current: & + $modifier-separator + $M;
 	@at-root {
 		#{$current} {
 			@content;
@@ -18,12 +39,18 @@
 	}
 }
 
-@mixin m($modifier) {
-	$M: $modifier !global;
-	$selector: &;
-	$current: $selector + $modifier-separator + $modifier;
+@mixin pseudo ($pseudo) {
 	@at-root {
-		#{$current} {
+		#{&}#{':#{$pseudo}'} {
+			@content;
+		}
+	}
+}
+
+@mixin state ($state) {
+	$current: $state-prefix + $state;
+	@at-root {
+		#{&}#{'.#{$current}'} {
 			@content;
 		}
 	}

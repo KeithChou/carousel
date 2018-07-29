@@ -4,8 +4,11 @@
 	background-color: red;
 	@include e(container) {
 		font-size: 40px;
-		@include m(page) {
-			color: #fff;
+		@include state(kk) {
+			color: yellow;
+			@include e(haha) {
+				color: green;
+			}
 		}
 	}
 }

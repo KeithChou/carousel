@@ -1,7 +1,11 @@
 <template>
 	<div class="el-carousel" :class="{ 'el-carousel--card': type === 'card' }" @mouseenter.stop="handleMouseEnter" @mouseleave.stop="handleMouseLeave">
-		<div class="el-carousel__container" :style="{ height: height }">
-			<div class="el-carousel__container--page">123</div>
+		<div class="el-carousel__container" :style="{ height: height }">123
+			<div class="el-carousel__container is-kk">456
+				<div class="el-carousel__haha">
+					789
+				</div>
+			</div>
 			<slot></slot>
 		</div>
 		<ul class="el-carousel__indicators" v-if="indicatorPosition !== 'none'" :class="{ 'el-carousel__indicators--labels': hasLabel, 'el-carousel__indicators--outside': indicatorPosition === 'outside' || type === 'card'}">

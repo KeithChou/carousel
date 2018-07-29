@@ -1,0 +1,41 @@
+@import './config';
+
+@function selectorToString ($selector) {
+	// 转成字符串
+	$element: inspect($selector);
+	$element: str-slice($element, 2, -2);
+	@return $element;
+}
+
+@function hasModifier ($selector) {
+	$element: selectorToString($selector);
+	@if str-index($element, $modifier-separator) {
+		@return true;
+	} @else {
+		@return false;
+	}
+}
+
+@function hasPseudo ($selector) {
+	$element: selectorToString($selector);
+	@if str-index($element, ':') {
+		@return true;
+	} @else if str-index($element, '::') {
+		@return true;
+	} @else {
+		@return false;
+	}
+}
+
+@function hasState ($selector) {
+	$element: selectorToString($selector);
+	@if str-index($element, $state-prefix) {
+		@return true;
+	} @else {
+		@return false;
+	}
+}
+
+@function hitAllRules ($selector) {
+	@return hasModifier($selector) or hasPseudo($selector) or hasState($selector);
+}
