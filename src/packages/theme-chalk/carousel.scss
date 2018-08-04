@@ -78,6 +78,7 @@ $--carousel-indicator-height: 2px !default;
         display: block;
         padding: 0;
         margin: 0;
+        opacity: .48;
         width: $--carousel-indicator-width;
         height: $--carousel-indicator-height;
         border: none;

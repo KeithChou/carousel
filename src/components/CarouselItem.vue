@@ -40,7 +40,9 @@ export default {
 		}
 	},
 	methods: {
-		handleItemClick () {}
+		handleItemClick () {},
+		translateItem () {
+		}
 	}
 }
 </script>
