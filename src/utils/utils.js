@@ -20,3 +20,11 @@ export const addResizeObserver = (element, fn) => {
 	}
 	element.__resizeListeners__.push(fn)
 }
+
+export const removeResizeObserver = (element, fn) => {
+	if (!element || !element.__resizeListeners__) return
+	element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn), 1)
+	if (!element.__resizeListeners__.length) {
+		element.__ro__.disconnect()
+	}
+}

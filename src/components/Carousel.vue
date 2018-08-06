@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { addResizeObserver } from '../utils/utils'
+import { addResizeObserver, removeResizeObserver } from '../utils/utils'
 
 export default {
   name: 'Carousel',
@@ -57,21 +57,21 @@ export default {
   	type: String
   },
  	data () {
- 	  return {
- 		  items: [],
- 		  activeIndex: -1,
- 		  containerWidth: 0,
- 		  timer: null,
- 		  hover: false
- 	  }
+        return {
+            items: [],
+            activeIndex: -1,
+            containerWidth: 0,
+            timer: null,
+            hover: false
+        }
   },
   watch: {
     activeIndex (val, oldVal) {
-      this.resetItemPosition(oldVal)
-      this.$emit('change', val, oldVal)
+        this.resetItemPosition(oldVal)
+        this.$emit('change', val, oldVal)
     },
     autoPlay (val) {
-      val ? this.startTimer() : this.pauseTimer()
+        val ? this.startTimer() : this.pauseTimer()
     }
   },
   computed: {
@@ -79,26 +79,28 @@ export default {
   		return this.items.some(item => item.label.toString().length > 0)
   	}
   },
-  mounted () {
-  	// 根据子元素的carouselItem来确定indicator的个数
-  	this.updateItems()
-    // 由于updateItems涉及到了DOM的更新，因此需要在DOM更新完之后再去监听this.$el的变化
-    this.$nextTick(() => {
-      // 每次this.$el发生变化时，就去调用子组件的方法改变位置
-      addResizeObserver(this.$el, this.resetItemPosition)
-      if (this.initialIndex < this.items.length && this.initialIndex >= 0) {
-        this.activeIndex = this.initialIndex
-      }
-      // 改变indicator的活动位置
-      this.startTimer()
-    })
+    mounted () {
+        // 根据子元素的carouselItem来确定indicator的个数
+        this.updateItems()
+        // 由于updateItems涉及到了DOM的更新，因此需要在DOM更新完之后再去监听this.$el的变化
+        this.$nextTick(() => {
+            // 每次this.$el发生变化时，就去调用子组件的方法改变位置
+            addResizeObserver(this.$el, this.resetItemPosition)
+            if (this.initialIndex < this.items.length && this.initialIndex >= 0) {
+            this.activeIndex = this.initialIndex
+            }
+            // 改变indicator的活动位置
+            this.startTimer()
+        })
+  },
+  beforeDestroy () {
+    if (this.$el) removeResizeObserver(this.$el, this.resetItemPosition)
   },
   methods: {
   	updateItems () {
   		this.items = this.$children.filter(item => item.$options.name === 'carouselItem')
   	},
     resetItemPosition (oldIndex) {
-      console.log(1)
       this.items.forEach((item, index) => {
         item.translateItem(index, this.activeIndex, oldIndex)
       })

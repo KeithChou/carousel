@@ -20,13 +20,19 @@
 
 <script>
 export default {
-	name: 'carouselItem',
+	name: 'CarouselItem',
 	props: {
 		name: String,
 		label: {
 			type: [String, Number],
 			default: ''
 		}
+	},
+	created () {
+
+	},
+	destroyed () {
+
 	},
 	data () {
 		return {
