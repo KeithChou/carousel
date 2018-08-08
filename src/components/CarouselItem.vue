@@ -29,10 +29,10 @@ export default {
 		}
 	},
 	created () {
-
+		this.$parent && this.$parent.updateItems()
 	},
 	destroyed () {
-
+		this.$parent && this.$parent.updateItems()
 	},
 	data () {
 		return {
@@ -47,7 +47,7 @@ export default {
 	},
 	methods: {
 		handleItemClick () {},
-		translateItem () {
+		translateItem (index, activeIndex, oldIndex) {
 		}
 	}
 }

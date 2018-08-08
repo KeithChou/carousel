@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <carousel height="150px" :autoPlay="true">
-      <carousel-item v-for="item in 5" :key="item">
+      <carousel-item v-for="(item, index) in 5" :key="item" :label="index + 1">
         <h3>{{ item }}</h3>
       </carousel-item>
     </carousel>
