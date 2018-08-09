@@ -47,7 +47,26 @@ export default {
 	},
 	methods: {
 		handleItemClick () {},
+		processIndex (index, activeIndex, length) {
+			if (activeIndex === 0 && index === length - 1) {
+				return -1
+			} else if (activeIndex === length - 1 && index === 0) {
+				return length
+			}
+			return index
+		},
 		translateItem (index, activeIndex, oldIndex) {
+			const parentWidth = this.$parent.$el.offsetWidth
+			const length = this.$parent.items.length
+			if (this.$parent.type !== 'card' && oldIndex !== undefined) {
+				this.animating = index === activeIndex || index === oldIndex
+			}
+			if (index !== activeIndex && length > 2) {
+				index = this.processIndex(index, activeIndex, length)
+			}
+			this.active = index === activeIndex
+			this.translate = parentWidth * (index - activeIndex)
+			this.ready = true
 		}
 	}
 }
