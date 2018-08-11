@@ -7,6 +7,26 @@
     <div
       class="el-carousel__container"
       :style="{ height: height }">
+      <transition name="carousel-arrow-left">
+        <button
+          type="button"
+          v-if="arrow !== 'never'"
+          v-show="arrow === 'always' || 'hover' && hover"
+          @click.stop="handleArrowClick(activeIndex - 1)"
+          class="el-carousel__arrow el-carousel__arrow--left">
+          <i class="left"></i>
+        </button>
+      </transition>
+      <transition name="carousel-arrow-right">
+        <button
+          type="button"
+          v-if="arrow !== 'never'"
+          v-show="arrow === 'always' || 'hover' && hover"
+          @click.stop="handleArrowClick(activeIndex + 1)"
+          class="el-carousel__arrow el-carousel__arrow--right">
+          <i class="right"></i>
+        </button>
+      </transition>
       <slot></slot>
     </div>
     <ul
@@ -18,7 +38,7 @@
         :key="index"
         class="el-carousel__indicator"
         :class="{ 'is-active': index === activeIndex }"
-        @mouseenter="throttledIndicatorHover(index)"
+        @mouseenter="handleIndicatorHover(index)"
         @click.stop="handleIndicatorClick(index)">
         <button class="el-carousel__button"><span v-if="hasLabel">{{ item.label }}</span></button>
       </li>
@@ -28,6 +48,7 @@
 
 <script>
 import { addResizeObserver, removeResizeObserver } from '../utils/utils'
+import { throttle } from 'throttle-debounce'
 
 export default {
   name: 'Carousel',
@@ -49,6 +70,10 @@ export default {
   		type: Number,
   		default: 3000
   	},
+    arrow: {
+      type: String,
+      default: 'hover'
+    },
   	indicatorPosition: String,
   	indicator: {
   		type: Boolean,
@@ -67,17 +92,19 @@ export default {
   },
   watch: {
     activeIndex (val, oldVal) {
-        this.resetItemPosition(oldVal)
-        this.$emit('change', val, oldVal)
+      this.resetItemPosition(oldVal)
     },
     autoPlay (val) {
-        val ? this.startTimer() : this.pauseTimer()
+      val ? this.startTimer() : this.pauseTimer()
     }
   },
   computed: {
   	hasLabel () {
   		return this.items.some(item => item.label.toString().length > 0)
   	}
+  },
+  created () {
+    this.handleIndicatorHover = throttle(300, this.handleIndicatorHover)
   },
   mounted () {
     // 根据子元素的CarouselItem实例来确定indicator的个数
@@ -119,9 +146,29 @@ export default {
         this.activeIndex = 0
       }
     },
-  	handleMouseEnter () {},
-  	handleMouseLeave () {},
-  	throttledIndicatorHover (index) {
+  	handleMouseEnter () {
+      this.hover = true
+      this.pauseTimer()
+    },
+  	handleMouseLeave () {
+      this.hover = false
+      this.startTimer()
+    },
+    handleArrowClick (index) {
+      index = Number(index)
+      if (isNaN(index) || index !== Math.floor(index)) {
+        return
+      }
+      const length = this.items.length
+      if (index < 0) {
+        this.activeIndex = length - 1
+      } else if (index >= length) {
+        this.activeIndex = 0
+      } else {
+        this.activeIndex = index
+      }
+    },
+  	handleIndicatorHover (index) {
       if (this.trigger === 'hover' && index !== this.activeIndex) {
         this.activeIndex = index
       }

@@ -15,6 +15,21 @@ $--carousel-indicator-out-color: $--border-color-hover !default;
 $--carousel-indicator-width: 30px !default;
 $--carousel-indicator-height: 2px !default;
 
+$--carousel-arrow-size: 36px !default;
+$--carousel-arrow-background: rgba(31, 45, 61, 0.11) !default;
+$--carousel-arrow-hover-background: rgba(31, 45, 61, 0.23) !default;
+
+@mixin arrow($rotate) {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-left: 1px solid #fff;
+    border-top: 1px solid #fff;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate($rotate);
+}
+
 @include b(carousel) {
 	position: relative;
 	overflow-x: hidden;
@@ -22,6 +37,38 @@ $--carousel-indicator-height: 2px !default;
 		position: relative;
 		height: 300px;
 	}
+    @include e(arrow) {
+        position: absolute;
+        top: 50%;
+        border: none;
+        outline: none;
+        margin: 0;
+        padding: 0;
+        width: $--carousel-arrow-size;
+        height: $--carousel-arrow-size;
+        cursor: pointer;
+        border-radius: 50%;
+        transition: .3s;
+        transform: translateY(-50%);
+        background-color: $--carousel-arrow-background;
+        text-align: center;
+        z-index: 50;
+        &:hover {
+            background-color: $--carousel-arrow-hover-background;
+        }
+        @include m(left) {
+            left: 16px;
+            .left {
+                @include arrow(-45deg);
+            }
+        }
+        @include m(right) {
+            right: 16px;
+            .right {
+                @include arrow(135deg);
+            }
+        }
+    }
 	@include e(indicators) {
 		position: absolute;
 		left: 50%;
@@ -87,4 +134,16 @@ $--carousel-indicator-height: 2px !default;
         cursor: pointer;
         transition: all .3s ease;
     }
+}
+
+.carousel-arrow-left-enter,
+.carousel-arrow-left-leave-active {
+  transform: translate(-10px, -50%);
+  opacity: 0;
+}
+
+.carousel-arrow-right-enter,
+.carousel-arrow-right-leave-active {
+  transform: translate(10px, -50%);
+  opacity: 0;
 }

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <carousel>
-      <carousel-item v-for="item in 10" :key="item">
+      <carousel-item v-for="item in 5" :key="item">
         <h3>{{ item }}</h3>
       </carousel-item>
     </carousel>
@@ -25,7 +25,6 @@ export default {
   color: #475669;
   font-size: 14px;
   opacity: 0.75;
-  line-height: 150px;
   margin: 0;
 }
 

@@ -48,6 +48,11 @@ export default {
 	methods: {
 		handleItemClick () {},
 		processIndex (index, activeIndex, length) {
+			/**
+			 * 处理两个边界，基于parentWidth * (index - activeIndex)公式
+			 * 一： 活动index等于0 && 索引等于len - 1时，重置index = -1，改变translate的距离
+			 * 二：活动index等于len - 1 && 所以等于0，重置一下index = len，改变translate的距离
+			 */
 			if (activeIndex === 0 && index === length - 1) {
 				return -1
 			} else if (activeIndex === length - 1 && index === 0) {
