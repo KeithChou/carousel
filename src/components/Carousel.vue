@@ -1,7 +1,6 @@
 <template>
 	<div
     class="el-carousel"
-    :class="{ 'el-carousel--card': type === 'card' }"
     @mouseenter.stop="handleMouseEnter"
     @mouseleave.stop="handleMouseLeave">
     <div
@@ -12,7 +11,7 @@
           type="button"
           v-if="arrow !== 'never'"
           v-show="arrow === 'always' || 'hover' && hover"
-          @click.stop="handleArrowClick(activeIndex - 1)"
+          @click.stop="throttledArrowClick(activeIndex - 1)"
           class="el-carousel__arrow el-carousel__arrow--left">
           <i class="left"></i>
         </button>
@@ -22,7 +21,7 @@
           type="button"
           v-if="arrow !== 'never'"
           v-show="arrow === 'always' || 'hover' && hover"
-          @click.stop="handleArrowClick(activeIndex + 1)"
+          @click.stop="throttledArrowClick(activeIndex + 1)"
           class="el-carousel__arrow el-carousel__arrow--right">
           <i class="right"></i>
         </button>
@@ -96,6 +95,9 @@ export default {
     },
     autoPlay (val) {
       val ? this.startTimer() : this.pauseTimer()
+    },
+    items (val) {
+      if (val.length > 0) this.setActiveItem(this.initialIndex)
     }
   },
   computed: {
@@ -105,6 +107,9 @@ export default {
   },
   created () {
     this.handleIndicatorHover = throttle(300, this.handleIndicatorHover)
+    this.throttledArrowClick = throttle(300, true, index => {
+      this.setActiveItem(index)
+    })
   },
   mounted () {
     // 根据子元素的CarouselItem实例来确定indicator的个数
@@ -134,6 +139,7 @@ export default {
     },
     startTimer () {
       if (this.interval < 0 || !this.autoPlay) return
+      // 使用定时器时一定要记得clearTimeout
       this.timer = window.setInterval(this.playSlides, this.interval)
     },
     pauseTimer () {
@@ -154,18 +160,22 @@ export default {
       this.hover = false
       this.startTimer()
     },
-    handleArrowClick (index) {
+    setActiveItem (index) {
       index = Number(index)
       if (isNaN(index) || index !== Math.floor(index)) {
         return
       }
       const length = this.items.length
+      const oldIndex = this.activeIndex
       if (index < 0) {
         this.activeIndex = length - 1
       } else if (index >= length) {
         this.activeIndex = 0
       } else {
         this.activeIndex = index
+      }
+      if (oldIndex === this.activeIndex) {
+        this.resetItemPosition(oldIndex)
       }
     },
   	handleIndicatorHover (index) {

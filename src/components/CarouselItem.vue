@@ -19,6 +19,7 @@
 </template>
 
 <script>
+const CARD_SCALE = 0.83
 export default {
 	name: 'CarouselItem',
 	props: {
@@ -46,7 +47,13 @@ export default {
 		}
 	},
 	methods: {
-		handleItemClick () {},
+		handleItemClick () {
+			const parent = this.$parent
+			if (parent.type === 'card') {
+				const index = parent.items.indexOf(this)
+				parent.setActiveItem(index)
+			}
+		},
 		processIndex (index, activeIndex, length) {
 			/**
 			 * 处理两个边界，基于parentWidth * (index - activeIndex)公式
@@ -60,17 +67,38 @@ export default {
 			}
 			return index
 		},
+		calculateTranslate (index, activeIndex, parentWidth) {
+			if (this.inStage) {
+				return parentWidth * ((2 - CARD_SCALE) * (index - activeIndex) + 1) / 4
+			} else if (index < activeIndex) {
+				return -(1 + CARD_SCALE) * parentWidth / 4
+			} else {
+				return (3 + CARD_SCALE) * parentWidth / 4
+			}
+		},
 		translateItem (index, activeIndex, oldIndex) {
+			// 获取到父元素的宽度
 			const parentWidth = this.$parent.$el.offsetWidth
+			// 拿到indicators的个数，实际上就是外部调用CarouselItem的个数
 			const length = this.$parent.items.length
+			// 非卡片式轮播，增加transition
 			if (this.$parent.type !== 'card' && oldIndex !== undefined) {
 				this.animating = index === activeIndex || index === oldIndex
 			}
+			// 修正轮播的index值
 			if (index !== activeIndex && length > 2) {
 				index = this.processIndex(index, activeIndex, length)
 			}
-			this.active = index === activeIndex
-			this.translate = parentWidth * (index - activeIndex)
+			if (this.$parent.type === 'card') {
+				// 当前activeIndex以及相应的两个
+				this.inStage = Math.round(Math.abs(index - activeIndex)) <= 1
+				this.active = index === activeIndex
+				this.translate = this.calculateTranslate(index, activeIndex, parentWidth)
+				this.scale = this.active ? 1 : CARD_SCALE
+			} else {
+				this.active = index === activeIndex
+				this.translate = parentWidth * (index - activeIndex)
+			}
 			this.ready = true
 		}
 	}

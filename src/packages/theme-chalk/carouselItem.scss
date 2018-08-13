@@ -21,8 +21,7 @@ $--color-white: #fff !default;
 		}
 		@include m(card) {
 			width: 50%;
-			tranition: transform .4s ease-in-out;
-			z-index: #{$--index-normal};
+			transition: transform .4s ease-in-out;
 			&.is-in-stage {
 				&:hover .el-carousel__mask,
 				&.is-hover .el-carousel__mask {
